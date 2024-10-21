@@ -1,73 +1,78 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace AppPaiements
+namespace AppConsoleLivres
 {
+  
+    public class Livre
+    {
+        public string Titre { get; set; }
+        public string Auteur { get; set; }
+        public int AnneePublication { get; set; }
+
+        public virtual void AfficherDetails()
+        {
+            Console.WriteLine($"Titre: {Titre}, Auteur: {Auteur}, Année: {AnneePublication}");
+        }
+    }
+
+    public class Revue : Livre
+    {
+        public int Volume { get; set; }
+
+        public override void AfficherDetails()
+        {
+            Console.WriteLine($"Revue - Titre: {Titre}, Auteur: {Auteur}, Année: {AnneePublication}, Volume: {Volume}");
+        }
+    }
+
+    public class Roman : Livre
+    {
+        public string Genre { get; set; }
+
+        public override void AfficherDetails()
+        {
+            Console.WriteLine($"Roman - Titre: {Titre}, Auteur: {Auteur}, Année: {AnneePublication}, Genre: {Genre}");
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
-        {
-            string nomUtilisateur;
-            do
+        {e
+            Revue revue1 = new Revue { Titre = "Science Magazine", Auteur = "John Doe", AnneePublication = 2021, Volume = 50 };
+            Revue revue2 = new Revue { Titre = "Nature", Auteur = "Jane Smith", AnneePublication = 2020, Volume = 45 };
+            Revue revue3 = new Revue { Titre = "Time", Auteur = "Emily Johnson", AnneePublication = 2022, Volume = 100 };
+
+            revue1.AfficherDetails();
+            revue2.AfficherDetails();
+            revue3.AfficherDetails();
+
+            Roman roman1 = new Roman { Titre = "Le Petit Prince", Auteur = "Antoine de Saint-Exupéry", AnneePublication = 1943, Genre = "Fiction" };
+            Roman roman2 = new Roman { Titre = "1984", Auteur = "George Orwell", AnneePublication = 1949, Genre = "Dystopie" };
+            Roman roman3 = new Roman { Titre = "To Kill a Mockingbird", Auteur = "Harper Lee", AnneePublication = 1960, Genre = "Fiction" };
+
+            roman1.AfficherDetails();
+            roman2.AfficherDetails();
+            roman3.AfficherDetails();
+
+            List<Livre> livres = new List<Livre>();
+            livres.Add(revue1);
+            livres.Add(revue2);
+            livres.Add(revue3);
+            livres.Add(roman1);
+            livres.Add(roman2);
+            livres.Add(roman3);
+
+            Console.WriteLine("\nDétails des livres dans la liste:");
+            foreach (var livre in livres)
             {
-                Console.Write("Entrez votre nom: ");
-                nomUtilisateur = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(nomUtilisateur))
-                {
-                    Console.WriteLine("Veuillez ressaisir votre nom.");
-                }
-            } while (string.IsNullOrWhiteSpace(nomUtilisateur));
-
-            Console.WriteLine($"Votre nom est : {nomUtilisateur}");
-
-            Utilisateur utilisateur = new Utilisateur(nomUtilisateur);
-
-            Console.Write("Entrez le montant pour la Carte de Crédit: ");
-            double montantCarte;
-            while (!double.TryParse(Console.ReadLine(), out montantCarte) || montantCarte < 0)
-            {
-                Console.Write("Montant invalide. Veuillez entrer un montant valide: ");
+                livre.AfficherDetails();
             }
-
-            Console.Write("Entrez une description pour la Carte de Crédit (appuyez sur Entrée pour laisser vide): ");
-            string descriptionCarte = Console.ReadLine();
-            descriptionCarte = string.IsNullOrWhiteSpace(descriptionCarte) ? "Aucune description fournie" : descriptionCarte;
-
-            Console.Write("Entrez le numéro de Carte de Crédit: ");
-            int numeroCarte;
-            while (!int.TryParse(Console.ReadLine(), out numeroCarte) || numeroCarte <= 0)
-            {
-                Console.Write("Numéro de carte invalide. Veuillez entrer un numéro valide: ");
-            }
-
-            CarteCredit carte1 = new CarteCredit(montantCarte, descriptionCarte, numeroCarte);
-
-            Console.Write("Entrez le montant pour PayPal: ");
-            double montantPaypal;
-            while (!double.TryParse(Console.ReadLine(), out montantPaypal) || montantPaypal < 0)
-            {
-                Console.Write("Montant invalide. Veuillez entrer un montant valide: ");
-            }
-
-            Console.Write("Entrez une description pour PayPal: ");
-            string descriptionPaypal = Console.ReadLine();
-            descriptionPaypal = string.IsNullOrWhiteSpace(descriptionPaypal) ? "Aucune description fournie" : descriptionPaypal;
-
-            Console.Write("Entrez l'email associé à PayPal: ");
-            string emailPaypal = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(emailPaypal))
-            {
-                emailPaypal = "email@exemple.com";
-            }
-
-            Paypal paypal1 = new Paypal(montantPaypal, descriptionPaypal, emailPaypal);
-
-            utilisateur.AjouterPaiement(carte1);
-            utilisateur.AjouterPaiement(paypal1);
-
-            utilisateur.AfficherInfo();
 
             Console.WriteLine("Appuyez sur une touche pour continuer...");
             Console.ReadKey();
         }
     }
 }
+
